@@ -1,5 +1,6 @@
+import axios from "axios";
 import { BrowserRouter, Switch, Route } from "react-router-dom"; 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Books from "./components/Books";
@@ -21,10 +22,22 @@ function deleteData(book){
 }
 
 function App() {
-  const [books, setBooks] = useState([
-    { _id: 1, title: "Silent Majority", author: "Hirate Yurina", price: 200000, stock: 9 },
-    { _id: 2, title: "Nobody's Fault", author: "Morita Hikaru", price: 150000, stock: 12},
-  ]);
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
+  function retrieveData() {
+    axios
+      .get("http://localhost:4000/book")
+      .then((response) => {
+        setBooks(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   return (
     <div>
